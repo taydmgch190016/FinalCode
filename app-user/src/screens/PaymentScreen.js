@@ -25,7 +25,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from "@expo/vector-icons";
 const PaymentScreen = () => {
   const dispatch = useDispatch();
   const [fullName, setFullName] = useState("");
@@ -49,7 +49,6 @@ const PaymentScreen = () => {
     quanlity: item.quantities,
     product: item._id,
   }));
-  console.log("OrderItems", orderItems);
 
   useEffect(() => {
     // Lấy giá trị từ AsyncStorage khi component được mount
@@ -77,30 +76,6 @@ const PaymentScreen = () => {
           "Please fill in all fields and add at least one order item"
         );
         return;
-      }
-
-      // Prepare order data
-      const orderData = {
-        shippingAddress: { fullName, address, city, phone },
-        totalPrice: total,
-        user: userID,
-        paymentMethod: "Paypal",
-        orderItems: orderItems,
-      };
-
-      try {
-        // Send order data to the backend API using Axios
-        const response = await axios.post(
-          "http://10.0.2.2:5000/api/orders/create",
-          orderData
-        );
-        dispatch(cleanCart());
-        console.log("Order saved successfully:", response.data);
-        // Optionally, you can navigate to a success screen or perform any other action
-      } catch (error) {
-        console.error("Error saving order:", error);
-        // Handle error - show an error message to the user or retry the operation
-        Alert.alert("Error", "Failed to save order. Please try again later.");
       }
     } catch (error) {
       console.error("Error when pressing Paypal:", error);
@@ -130,10 +105,15 @@ const PaymentScreen = () => {
         orderData
       );
       dispatch(cleanCart());
+      setFullName("");
+      setAddress("");
+      setCity("");
+      setPhone("");
       console.log("Order saved successfully:", response.data);
       ToastAndroid.show("Order successful", ToastAndroid.SHORT);
       navigation.navigate("Payment");
       // Optionally, you can navigate to a success screen or perform any other action
+      
     } catch (error) {
       console.error("Error saving order:", error);
       // Handle error - show an error message to the user or retry the operation
@@ -163,6 +143,35 @@ const PaymentScreen = () => {
       console.log("capturePayment res++++", res);
       alert("Payment sucessfull...!!!");
       clearPaypalState();
+      
+
+      // Prepare order data
+      const orderData = {
+        shippingAddress: { fullName, address, city, phone },
+        totalPrice: total,
+        user: userID,
+        paymentMethod: "Paypal",
+        orderItems: orderItems,
+      };
+
+      try {
+        // Send order data to the backend API using Axios
+        const response = await axios.post(
+          "http://10.0.2.2:5000/api/orders/create",
+          orderData
+        );
+        setFullName("");
+        setAddress("");
+        setCity("");
+        setPhone("");
+        dispatch(cleanCart());
+        console.log("Order saved successfully:", response.data);
+        // Optionally, you can navigate to a success screen or perform any other action
+      } catch (error) {
+        console.error("Error saving order:", error);
+        // Handle error - show an error message to the user or retry the operation
+        Alert.alert("Error", "Failed to save order. Please try again later.");
+      }
     } catch (error) {
       console.log("error raised in payment capture", error);
     }
@@ -173,14 +182,12 @@ const PaymentScreen = () => {
   };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      <View style={{marginTop:35}}>
-            <TouchableOpacity onPress={()=> navigation.goBack()}>
-            <Ionicons name="arrow-back-circle" size={47} color="black" />
-            </TouchableOpacity>
-        </View>
-      <View
-        style={{flexDirection: "row", alignItems: "center" }}
-      >
+      <View style={{ marginTop: 35 }}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Ionicons name="arrow-back-circle" size={47} color="black" />
+        </TouchableOpacity>
+      </View>
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Text style={{ fontSize: 18, fontWeight: "bold" }}>Subtotal : </Text>
         <Text style={{ fontSize: 20, fontWeight: "bold", color: "red" }}>
           {total}$
@@ -334,7 +341,7 @@ const PaymentScreen = () => {
       </TouchableOpacity>
       <Modal visible={!!paypalUrl}>
         <TouchableOpacity onPress={clearPaypalState} style={{ margin: 24 }}>
-          <Text>Closed</Text>
+          <Ionicons name="arrow-back-circle" size={47} color="black" />
         </TouchableOpacity>
         <View style={{ flex: 1 }}>
           {paypalUrl && (

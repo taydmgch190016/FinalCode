@@ -27,8 +27,8 @@ const StoreSelectionScreen = ({ navigation }) => {
 
   const handleStoreSelection = (storeId) => {
     navigation.navigate("Main", {
-      screen: "Home", // Tên màn hình của trang List Product trong BottomTabs
-      params: { storeId } // Tham số cần truyền cho trang List Product
+      screen: "Home", 
+      params: { storeId } 
     });
   };
 

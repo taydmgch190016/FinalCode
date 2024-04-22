@@ -3,6 +3,7 @@ const router = express.Router();
 const Order = require("../../models/Order");
 const Product = require("../../models/Product");
 const Customer = require("../../models/Customer");
+const nodemailer = require('nodemailer');
 
 const createOrder = async (req, res) => {
   try {
@@ -33,6 +34,7 @@ const createOrder = async (req, res) => {
 
     const savedOrder = await newOrder.save();
     const customer = await Customer.findById(user);
+    let amount= newOrder.totalPrice;
     let emailCustomer = customer.email;
     let transporter = nodemailer.createTransport({
       service: "gmail",
@@ -40,8 +42,8 @@ const createOrder = async (req, res) => {
       port: 587,
       secure: false,
       auth: {
-        user: "taydmgch190016@fpt.edu.vn",
-        pass: "ycec ixbo vbwk pzlj",
+        user: "testnodemailer150601@gmail.com",
+        pass: "lmiu qgdk kbux hwkx",
       },
       tls: { rejectUnauthorized: false },
     });
@@ -50,7 +52,7 @@ const createOrder = async (req, res) => {
                             <div style="padding: 10px; background-color: #003375">
                                 <div style="padding: 10px; background-color: white;">    
                         `;
-    content += '<h4 style="color: #0085ff"> New Account </h4> <hr>';
+    content += '<h4 style="color: #0085ff"> New Order! </h4> <hr>';
     content +=
       '<span style="color: black">Hello: ' +
       customer.username.toString() +
@@ -58,11 +60,17 @@ const createOrder = async (req, res) => {
     content +=
       '<span style="color: black"> You have a new order from Minh Tay Store! ';
     ("</span><br>");
+    content +=
+      '<span style="color: black"> Total amount: ' + amount +
+    ("$</span><br>");
+    content +=
+      '<span style="color: black"> Payment method: ' + newOrder.paymentMethod +
+    (".</span><br>");
     content += "</div> </div>";
     let mainOptions = {
       from: "Final Store",
       to: emailCustomer,
-      subject: "New Account ",
+      subject: "New Order! ",
       text: "abc",
       html: content,
     };
@@ -78,6 +86,32 @@ const createOrder = async (req, res) => {
   }
 };
 
+const getOrders = async (req, res) => {
+  try {
+    const userID = req.query.userID;
+    const orders = await Order.find({ user: userID });
+    res.json(orders);
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+const orderDetail = async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id);
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+    res.json(order);
+  } catch (error) {
+    console.error('Error fetching order detail:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 module.exports = {
   createOrder,
+  getOrders,
+  orderDetail
 };

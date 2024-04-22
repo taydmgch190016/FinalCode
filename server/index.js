@@ -36,6 +36,7 @@ app.use("/api/client/auth", require("./routes/mobile/clientAuthRoutes"));
 app.use("/api/client/stores", require("./routes/storeRoute"));
 app.use("/api/client/products", require("./routes/productRoutes"));
 app.use("/api/orders", require("./routes/mobile/orderRoutes"));
+app.use("/api/customers", require("./routes/mobile/customerRoutes"));
 
 
 // Middleware xử lý request không được xử lý

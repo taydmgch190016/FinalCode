@@ -10,8 +10,10 @@ var Product = require("../../models/Product");
 
 var Customer = require("../../models/Customer");
 
+var nodemailer = require('nodemailer');
+
 var createOrder = function createOrder(req, res) {
-  var _req$body, orderItems, shippingAddress, totalPrice, user, paymentMethod, productIds, products, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _loop, _iterator, _step, newOrder, savedOrder, customer, emailCustomer, transporter, content, mainOptions;
+  var _req$body, orderItems, shippingAddress, totalPrice, user, paymentMethod, productIds, products, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _loop, _iterator, _step, newOrder, savedOrder, customer, amount, emailCustomer, transporter, content, mainOptions;
 
   return regeneratorRuntime.async(function createOrder$(_context2) {
     while (1) {
@@ -134,6 +136,7 @@ var createOrder = function createOrder(req, res) {
 
         case 38:
           customer = _context2.sent;
+          amount = newOrder.totalPrice;
           emailCustomer = customer.email;
           transporter = nodemailer.createTransport({
             service: "gmail",
@@ -141,8 +144,8 @@ var createOrder = function createOrder(req, res) {
             port: 587,
             secure: false,
             auth: {
-              user: "taydmgch190016@fpt.edu.vn",
-              pass: "ycec ixbo vbwk pzlj"
+              user: "testnodemailer150601@gmail.com",
+              pass: "lmiu qgdk kbux hwkx"
             },
             tls: {
               rejectUnauthorized: false
@@ -150,15 +153,17 @@ var createOrder = function createOrder(req, res) {
           });
           content = "";
           content += "\n                            <div style=\"padding: 10px; background-color: #003375\">\n                                <div style=\"padding: 10px; background-color: white;\">    \n                        ";
-          content += '<h4 style="color: #0085ff"> New Account </h4> <hr>';
+          content += '<h4 style="color: #0085ff"> New Order! </h4> <hr>';
           content += '<span style="color: black">Hello: ' + customer.username.toString() + "!</span><br>";
           content += '<span style="color: black"> You have a new order from Minh Tay Store! ';
           "</span><br>";
+          content += '<span style="color: black"> Total amount: ' + amount + "$</span><br>";
+          content += '<span style="color: black"> Payment method: ' + newOrder.paymentMethod + ".</span><br>";
           content += "</div> </div>";
           mainOptions = {
             from: "Final Store",
             to: emailCustomer,
-            subject: "New Account ",
+            subject: "New Order! ",
             text: "abc",
             html: content
           };
@@ -166,25 +171,105 @@ var createOrder = function createOrder(req, res) {
             if (err) console.error("Error: ", err);else console.log("Message sent: ", info.response);
           });
           res.status(201).json(savedOrder);
-          _context2.next = 57;
+          _context2.next = 60;
           break;
 
-        case 53:
-          _context2.prev = 53;
+        case 56:
+          _context2.prev = 56;
           _context2.t1 = _context2["catch"](0);
           console.error("Error creating order:", _context2.t1.message);
           res.status(500).json({
             error: "Server error"
           });
 
-        case 57:
+        case 60:
         case "end":
           return _context2.stop();
       }
     }
-  }, null, null, [[0, 53], [9, 20, 24, 32], [25,, 27, 31]]);
+  }, null, null, [[0, 56], [9, 20, 24, 32], [25,, 27, 31]]);
+};
+
+var getOrders = function getOrders(req, res) {
+  var userID, orders;
+  return regeneratorRuntime.async(function getOrders$(_context3) {
+    while (1) {
+      switch (_context3.prev = _context3.next) {
+        case 0:
+          _context3.prev = 0;
+          userID = req.query.userID;
+          _context3.next = 4;
+          return regeneratorRuntime.awrap(Order.find({
+            user: userID
+          }));
+
+        case 4:
+          orders = _context3.sent;
+          res.json(orders);
+          _context3.next = 12;
+          break;
+
+        case 8:
+          _context3.prev = 8;
+          _context3.t0 = _context3["catch"](0);
+          console.error('Error fetching orders:', _context3.t0);
+          res.status(500).json({
+            message: 'Server error'
+          });
+
+        case 12:
+        case "end":
+          return _context3.stop();
+      }
+    }
+  }, null, null, [[0, 8]]);
+};
+
+var orderDetail = function orderDetail(req, res) {
+  var order;
+  return regeneratorRuntime.async(function orderDetail$(_context4) {
+    while (1) {
+      switch (_context4.prev = _context4.next) {
+        case 0:
+          _context4.prev = 0;
+          _context4.next = 3;
+          return regeneratorRuntime.awrap(Order.findById(req.params.id));
+
+        case 3:
+          order = _context4.sent;
+
+          if (order) {
+            _context4.next = 6;
+            break;
+          }
+
+          return _context4.abrupt("return", res.status(404).json({
+            message: 'Order not found'
+          }));
+
+        case 6:
+          res.json(order);
+          _context4.next = 13;
+          break;
+
+        case 9:
+          _context4.prev = 9;
+          _context4.t0 = _context4["catch"](0);
+          console.error('Error fetching order detail:', _context4.t0);
+          res.status(500).json({
+            message: 'Server error'
+          });
+
+        case 13:
+        case "end":
+          return _context4.stop();
+      }
+    }
+  }, null, null, [[0, 9]]);
 };
 
 module.exports = {
-  createOrder: createOrder
+  createOrder: createOrder,
+  getOrders: getOrders,
+  orderDetail: orderDetail
 };

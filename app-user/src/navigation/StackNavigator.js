@@ -14,6 +14,9 @@ import ProductDetail from "../screens/ProductDetail.js";
 import Profile from "../screens/Profile.js";
 import CartScreen from "../screens/CartScreen.js";
 import PaymentScreen from "../screens/PaymentScreen.js";
+import InformationScreen from "../screens/InformationScreen.js";
+import OrderScreen from "../screens/OrderScreen.js";
+import OrderDetailScreen from "../screens/OrderDetailScreen";
 import { useDispatch, useSelector } from "react-redux";
 import { selectCartItemsCount } from "../../redux/CartReducer";
 
@@ -52,6 +55,21 @@ const StackNavigator = () => {
         <Stack.Screen
           name="Payment"
           component={PaymentScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Info"
+          component={InformationScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="OrderHistory"
+          component={OrderScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="OrderDetail"
+          component={OrderDetailScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

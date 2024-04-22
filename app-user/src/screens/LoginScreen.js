@@ -38,6 +38,8 @@ const LoginScreen = () => {
       });
       await AsyncStorage.setItem('userID', response.data.id);
       console.log("Đăng nhập thành công:", response.data);
+      setEmail("");
+      setPassword("");
       navigation.navigate("CollectStore");
     } catch (error) {
       console.error("Đăng nhập không thành công:", error.response.data);
