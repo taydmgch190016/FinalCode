@@ -22,8 +22,10 @@ const orderSchema = new mongoose.Schema({
     },
     totalPrice: { type: Number, required: true },
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'Customer', required: true },
+    storeId: { type: mongoose.Schema.Types.ObjectId, ref: 'Store', required: true },
     orderedAt: { type: Date, default: Date.now },
     paymentMethod: { type: String},
+    delivery: { type: Boolean, default: false },
 },
 );
 const Order = mongoose.model('Order', orderSchema);

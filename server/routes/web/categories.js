@@ -11,5 +11,17 @@ router.post(
   checkEmployee,
   categoryController.addCategory
 );
+router.put(
+  "/updateCategory/:id",
+  authMiddleware,
+  checkEmployee,
+  categoryController.updateCategory
+);
+router.delete(
+  "/deleteCategory/:id",
+  authMiddleware,
+  checkEmployee,
+  categoryController.deleteCategory
+);
 
 module.exports = router;

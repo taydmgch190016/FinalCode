@@ -25,8 +25,14 @@ const StoreSelectionScreen = ({ navigation }) => {
     }
   };
 
-  const handleStoreSelection = (storeId) => {
-    navigation.navigate("Main", {
+  const handleStoreSelection = async (storeId) => {
+    try{
+      await AsyncStorage.setItem('selectedStoreId', storeId);
+      console.log("save selectedStoreId done!")
+    }catch (error) {
+      console.error("Error fetching stores:", error);
+    }
+    navigation.replace("Main", {
       screen: "Home", 
       params: { storeId } 
     });
