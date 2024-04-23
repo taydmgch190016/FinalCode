@@ -10,6 +10,7 @@ import {
 } from "@ant-design/icons";
 import Category from "../../components/Category";
 import Store from "../../components/Store";
+import Employee from "../../components/Employee";
 
 const { Sider, Content } = Layout;
 
@@ -34,7 +35,7 @@ const HomePage = () => {
       case "2":
         return <Store />;
       case "3":
-        return <p>Employees Content</p>;
+        return <Employee />;
       case "4":
         return <Category />;
       case "5":

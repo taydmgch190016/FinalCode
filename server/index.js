@@ -3,7 +3,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const app = express();
-const path = require('path');
+const path = require("path");
 require("dotenv").config();
 
 // Sử dụng cors để cho phép cross-origin requests
@@ -33,11 +33,11 @@ app.use("/api/auth", require("./routes/web/authRoutes"));
 app.use("/api/products", require("./routes/web/products"));
 app.use("/api/categories", require("./routes/web/categories"));
 app.use("/api/client/auth", require("./routes/mobile/clientAuthRoutes"));
-app.use("/api/client/stores", require("./routes/storeRoute"));
+app.use("/api/client/stores", require("./routes/storeRoutes"));
 app.use("/api/client/products", require("./routes/productRoutes"));
 app.use("/api/orders", require("./routes/mobile/orderRoutes"));
 app.use("/api/customers", require("./routes/mobile/customerRoutes"));
-
+app.use("/api/employees", require("./routes/employeeRoutes"));
 
 // Middleware xử lý request không được xử lý
 app.use((req, res, next) => {
