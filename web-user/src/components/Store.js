@@ -1,111 +1,103 @@
 import React, { useEffect, useState } from "react";
 import { Table, Button, Modal, Form, Input, Flex } from "antd";
-import {
-  getCategory,
-  addCategory,
-  deleteCategory,
-  updateCategory,
-} from "../api/category.api";
+import { getStore, addStore, updateStore, deleteStore } from "../api/store.api";
 import { toast } from "react-toastify";
 
-const Category = () => {
+const Store = () => {
   const [form] = Form.useForm();
   const [pageSize, setPageSize] = useState(6);
   const [loading, setLoading] = useState(false);
-  const [categories, setCategories] = useState([]);
+  const [stories, setStories] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
-    fetchCategories();
+    fetchStories();
   }, []);
 
-  const fetchCategories = async () => {
+  const fetchStories = async () => {
     try {
-      const { response, err } = await getCategory(currentPage, pageSize);
+      const { response, err } = await getStore(currentPage, pageSize);
 
       if (err) {
-        toast.error("Error fetching categories!");
+        toast.error("Error fetching stories!");
       } else {
-        setCategories(response);
+        setStories(response);
       }
     } catch (error) {
-      toast.error("Error fetching categories!");
+      toast.error("Error fetching stories!");
     }
   };
 
-  const handleAddCategory = async (values) => {
+  const handleAddStore = async (values) => {
     setLoading(true);
 
     try {
-      const { response, err } = await addCategory(values);
+      const { response, err } = await addStore(values);
       if (response) {
-        toast.success("Category added successfully!");
+        toast.success("Store added successfully!");
       }
 
       if (err) {
-        toast.error("Error adding category!");
+        toast.error("Error adding store!");
       } else {
-        setCategories([...categories, response]);
+        setStories([...stories, response]);
         setModalVisible(false);
         form.resetFields();
       }
     } catch (error) {
-      toast.error("Error adding category!");
+      toast.error("Error adding store!");
     }
 
     setLoading(false);
   };
 
-  const handleUpdateCategory = async (categoryId, values) => {
+  const handleUpdateStore = async (storeId, values) => {
     setLoading(true);
 
     try {
-      const { response, err } = await updateCategory(categoryId, values);
+      const { response, err } = await updateStore(storeId, values);
       if (response) {
-        toast.success("Category updated successfully!");
+        toast.success("Store updated successfully!");
       }
 
       if (err) {
-        toast.error("Error updating category!");
+        toast.error("Error updating store!");
       } else {
-        const updatedCategories = categories.map((category) =>
-          category._id === categoryId ? { ...category, ...values } : category
+        const updatedStories = stories.map((store) =>
+          store._id === storeId ? { ...store, ...values } : store
         );
-        setCategories(updatedCategories);
+        setStories(updatedStories);
         setModalVisible(false);
         form.resetFields();
       }
     } catch (error) {
-      toast.error("Error updating category!");
+      toast.error("Error updating store!");
     }
 
     setLoading(false);
   };
 
-  const handleDeleteCategory = async (categoryId) => {
+  const handleDeleteStore = async (storeId) => {
     setLoading(true);
 
     try {
-      const { response, err } = await deleteCategory(categoryId);
+      const { response, err } = await deleteStore(storeId);
       if (response) {
-        toast.success("Category deleted successfully!");
+        toast.success("Store deleted successfully!");
       }
 
       if (err) {
-        toast.error("Error deleting category!");
+        toast.error("Error deleting store!");
       } else {
-        setCategories(
-          categories.filter((category) => category._id !== categoryId)
-        );
+        setStories(stories.filter((store) => store._id !== storeId));
 
-        // Check if the current page becomes empty after deletion
-        if (categories.length === 1 && currentPage > 1) {
+        if (stories.length === 1 && currentPage > 1) {
           setCurrentPage(currentPage - 1);
         }
       }
     } catch (error) {
-      toast.error("Error deleting category!");
+      toast.error("Error deleting store!");
     }
 
     setLoading(false);
@@ -123,9 +115,15 @@ const Category = () => {
 
   const columns = [
     {
-      title: "Category Name",
+      title: "Store Name",
       dataIndex: "name",
       key: "name",
+      align: "center",
+    },
+    {
+      title: "Store Address",
+      dataIndex: "address",
+      key: "address",
       align: "center",
     },
     {
@@ -133,19 +131,16 @@ const Category = () => {
       dataIndex: "",
       key: "actions",
       align: "right",
-      render: (_, category) => (
+      render: (_, store) => (
         <div className="actions-cell" style={{ textAlign: "right" }}>
           <Flex wrap="wrap" gap="small" justify="flex-end" align="center">
-            <Button
-              type="primary"
-              onClick={() => handleEditButtonClick(category)}
-            >
+            <Button type="primary" onClick={() => handleEditButtonClick(store)}>
               Edit
             </Button>
             <Button
               type="primary"
               danger
-              onClick={() => handleDeleteCategory(category._id)}
+              onClick={() => handleDeleteStore(store._id)}
             >
               Delete
             </Button>
@@ -162,23 +157,23 @@ const Category = () => {
         onClick={() => setModalVisible(true)}
         style={{ maxWidth: "250px" }}
       >
-        Add Category
+        Add Store
       </Button>
       <Table
-        dataSource={categories}
+        dataSource={stories}
         columns={columns}
         rowKey="_id"
         bordered
         pagination={{
           pageSize: pageSize,
           current: currentPage,
-          total: categories.length,
+          total: stories.length,
           onChange: (page, pageSize) => setCurrentPage(page),
         }}
       />
       <Modal
         visible={modalVisible}
-        title="Category"
+        title="Store"
         onCancel={handleModalCancel}
         footer={[
           <Button key="cancel" onClick={handleModalCancel}>
@@ -191,9 +186,9 @@ const Category = () => {
             onClick={() => {
               form.validateFields().then((values) => {
                 if (form.getFieldValue("_id")) {
-                  handleUpdateCategory(form.getFieldValue("_id"), values);
+                  handleUpdateStore(form.getFieldValue("_id"), values);
                 } else {
-                  handleAddCategory(values);
+                  handleAddStore(values);
                 }
               });
             }}
@@ -208,9 +203,16 @@ const Category = () => {
           </Form.Item>
           <Form.Item
             name="name"
-            label="Category Name"
+            label="Store Name"
+            rules={[{ required: true, message: "Please enter the store name" }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="address"
+            label="Store Adress"
             rules={[
-              { required: true, message: "Please enter the category name" },
+              { required: true, message: "Please enter the store address" },
             ]}
           >
             <Input />
@@ -221,4 +223,4 @@ const Category = () => {
   );
 };
 
-export default Category;
+export default Store;

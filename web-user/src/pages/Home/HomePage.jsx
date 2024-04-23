@@ -9,6 +9,7 @@ import {
   DropboxOutlined,
 } from "@ant-design/icons";
 import Category from "../../components/Category";
+import Store from "../../components/Store";
 
 const { Sider, Content } = Layout;
 
@@ -31,9 +32,9 @@ const HomePage = () => {
       case "1":
         return <p>Dashboard Content</p>;
       case "2":
-        return <p>Employees Content</p>;
+        return <Store />;
       case "3":
-        return <p>Stores Content</p>;
+        return <p>Employees Content</p>;
       case "4":
         return <Category />;
       case "5":
@@ -58,11 +59,11 @@ const HomePage = () => {
           </Menu.Item>
           {role === "admin" && (
             <>
-              <Menu.Item key="2" icon={<UserOutlined />}>
-                Employees
-              </Menu.Item>
-              <Menu.Item key="3" icon={<ShoppingCartOutlined />}>
+              <Menu.Item key="2" icon={<ShoppingCartOutlined />}>
                 Stores
+              </Menu.Item>
+              <Menu.Item key="3" icon={<UserOutlined />}>
+                Employees
               </Menu.Item>
             </>
           )}
