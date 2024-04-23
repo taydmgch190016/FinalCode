@@ -13,14 +13,14 @@ var Customer = require("../../models/Customer");
 var nodemailer = require('nodemailer');
 
 var createOrder = function createOrder(req, res) {
-  var _req$body, orderItems, shippingAddress, totalPrice, user, paymentMethod, productIds, products, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _loop, _iterator, _step, newOrder, savedOrder, customer, amount, emailCustomer, transporter, content, mainOptions;
+  var _req$body, orderItems, shippingAddress, totalPrice, user, storeId, paymentMethod, productIds, products, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _loop, _iterator, _step, newOrder, savedOrder, customer, amount, emailCustomer, transporter, content, mainOptions;
 
   return regeneratorRuntime.async(function createOrder$(_context2) {
     while (1) {
       switch (_context2.prev = _context2.next) {
         case 0:
           _context2.prev = 0;
-          _req$body = req.body, orderItems = _req$body.orderItems, shippingAddress = _req$body.shippingAddress, totalPrice = _req$body.totalPrice, user = _req$body.user, paymentMethod = _req$body.paymentMethod;
+          _req$body = req.body, orderItems = _req$body.orderItems, shippingAddress = _req$body.shippingAddress, totalPrice = _req$body.totalPrice, user = _req$body.user, storeId = _req$body.storeId, paymentMethod = _req$body.paymentMethod;
           productIds = orderItems.map(function (item) {
             return item.product;
           });
@@ -124,6 +124,7 @@ var createOrder = function createOrder(req, res) {
             shippingAddress: shippingAddress,
             totalPrice: totalPrice,
             user: user,
+            storeId: storeId,
             paymentMethod: paymentMethod
           });
           _context2.next = 35;

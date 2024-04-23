@@ -15,6 +15,7 @@ const Profile = () => {
     try{
       await AsyncStorage.removeItem('userID');
       await AsyncStorage.removeItem('token');
+      await AsyncStorage.removeItem('selectedStoreId');
       dispatch(cleanCart());
       console.log("logout completed")
       navigation.navigate('Login');

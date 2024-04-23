@@ -7,7 +7,7 @@ const nodemailer = require('nodemailer');
 
 const createOrder = async (req, res) => {
   try {
-    const { orderItems, shippingAddress, totalPrice, user, paymentMethod } =
+    const { orderItems, shippingAddress, totalPrice, user, storeId, paymentMethod } =
       req.body;
 
     const productIds = orderItems.map((item) => item.product);
@@ -29,6 +29,7 @@ const createOrder = async (req, res) => {
       shippingAddress,
       totalPrice,
       user,
+      storeId,
       paymentMethod,
     });
 

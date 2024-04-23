@@ -50,6 +50,7 @@ const OrderDetailScreen = ({ route }) => {
           <Text style={{fontWeight:"bold", color:"red"}}>Total Price: {order.totalPrice}$</Text>
           <Text>Payment Method: {order.paymentMethod}</Text>
           <Text style={{fontStyle:"italic"}}>Ordered At: {order.orderedAt}</Text>
+          <Text style={{fontSize:20, fontWeight:"bold"}}>Delivery: {order.delivery ? "Done" : "Pending"}</Text>
         </View>
       ) : (
         <Text>Loading order detail...</Text>

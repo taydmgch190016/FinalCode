@@ -42,6 +42,7 @@ const PaymentScreen = () => {
     .reduce((curr, prev) => curr + prev, 0);
   const navigation = useNavigation();
   const [userID, setUserID] = useState(null);
+  const [storeID, setStoreID] = useState(null);
   const orderItems = cart.map((item) => ({
     name: item.name,
     image: item.imageURL[0],
@@ -58,6 +59,16 @@ const PaymentScreen = () => {
       })
       .catch((error) => {
         console.error("Error retrieving user ID:", error);
+      });
+  }, []);
+  useEffect(() => {
+    // Lấy giá trị từ AsyncStorage khi component được mount
+    AsyncStorage.getItem("selectedStoreId")
+      .then((value) => {
+        setStoreID(value);
+      })
+      .catch((error) => {
+        console.error("Error retrieving store ID:", error);
       });
   }, []);
 
@@ -94,6 +105,7 @@ const PaymentScreen = () => {
       shippingAddress: { fullName, address, city, phone },
       totalPrice: total,
       user: userID,
+      storeId: storeID,
       paymentMethod: "COD",
       orderItems: orderItems,
     };
@@ -150,6 +162,7 @@ const PaymentScreen = () => {
         shippingAddress: { fullName, address, city, phone },
         totalPrice: total,
         user: userID,
+        storeId: storeID,
         paymentMethod: "Paypal",
         orderItems: orderItems,
       };
