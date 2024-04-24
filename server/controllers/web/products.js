@@ -37,7 +37,7 @@ const addProduct = async (req, res) => {
       price: req.body.price,
       quantity: req.body.quantity,
       imageURL: req.file ? req.file.path : "", // Lấy đường dẫn ảnh từ multer
-      storeId: loggedInEmployee.storeId, // Gán storeId của nhân viên
+      storeId: req.body.storeId, // Gán storeId của nhân viên
       categoryId: req.body.categoryId,
     });
     // Lưu sản phẩm vào cơ sở dữ liệu
