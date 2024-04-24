@@ -31,7 +31,7 @@ exports.webLogin = async (req, res) => {
 
     // Tạo JWT token
     const token = jwt.sign({ userId: user._id, role }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "7d",
     });
 
     res.json({ message: "Login successful", token, id: user._id, role });

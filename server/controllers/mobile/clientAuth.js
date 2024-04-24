@@ -96,7 +96,7 @@ const clientLogin = async (req, res) => {
     const token = jwt.sign(
       { customerId: customer._id },
       process.env.JWT_SECRET,
-      { expiresIn: "5m" }
+      { expiresIn: "7d" }
     );
 
     res.json({ message: "Login successful", token, id: customer._id });
