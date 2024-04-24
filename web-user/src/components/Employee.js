@@ -140,6 +140,11 @@ const Employee = () => {
       dataIndex: "password",
       key: "password",
       align: "center",
+      render: (_, employee) => (
+        <div className="password-cell" style={{ textAlign: "center" }}>
+          {"•".repeat(8)}
+        </div>
+      ),
     },
     {
       title: "Store",

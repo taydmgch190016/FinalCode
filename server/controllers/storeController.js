@@ -41,14 +41,31 @@ exports.addStore = async (req, res) => {
 
 // Controller để cập nhật thông tin cửa hàng
 exports.updateStore = async (req, res) => {
+  // Lấy thông tin của admin từ JWT token
+  const token = req.headers.authorization.split(" ")[1];
+  const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+  const loggedInAdminId = decodedToken.userId;
+
   const storeId = req.params.id;
+
   try {
+    // Tìm kiếm thông tin của admin dựa trên id
+    const loggedInAdmin = await Admin.findById(loggedInAdminId);
+
+    if (!loggedInAdmin) {
+      // Nếu không tìm thấy admin, trả về lỗi
+      return res.status(404).json({ message: "Admin not found" });
+    }
+
     const store = await Store.findById(storeId);
     if (!store) {
       return res.status(404).json({ message: "Store not found" });
     }
-    store.name = req.body.name;
-    store.address = req.body.address;
+
+    const { name, address } = req.body;
+
+    store.name = name;
+    store.address = address;
     const updatedStore = await store.save();
     res.json(updatedStore);
   } catch (error) {
@@ -58,12 +75,27 @@ exports.updateStore = async (req, res) => {
 
 // Controller để xóa cửa hàng
 exports.deleteStore = async (req, res) => {
+  // Lấy thông tin của admin từ JWT token
+  const token = req.headers.authorization.split(" ")[1];
+  const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+  const loggedInAdminId = decodedToken.userId;
+
   const storeId = req.params.id;
+
   try {
+    // Tìm kiếm thông tin của admin dựa trên id
+    const loggedInAdmin = await Admin.findById(loggedInAdminId);
+
+    if (!loggedInAdmin) {
+      // Nếu không tìm thấy admin, trả về lỗi
+      return res.status(404).json({ message: "Admin not found" });
+    }
+
     const store = await Store.findById(storeId);
     if (!store) {
       return res.status(404).json({ message: "Store not found" });
     }
+
     await store.deleteOne();
     res.json({ message: "Store deleted" });
   } catch (error) {
