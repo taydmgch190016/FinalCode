@@ -15,7 +15,6 @@ axiosClient.interceptors.request.use(async (config) => {
     ...config,
     headers: {
       "Content-Type": "application/json",
-      "Content-Type": "multipart/form-data",
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
   };
