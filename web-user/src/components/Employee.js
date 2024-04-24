@@ -179,7 +179,12 @@ const Employee = () => {
     },
   ];
 
-  const storeOptions = employee.map((emp) => emp.storeOptions).flat();
+  const storeOptions = employee
+    .map((emp) => emp.storeOptions)
+    .flat()
+    .filter((store, index, self) => {
+      return index === self.findIndex((s) => s?._id === store?._id);
+    });
 
   return (
     <Flex vertical gap={10} justify="end">
@@ -256,7 +261,7 @@ const Employee = () => {
             rules={[{ required: true, message: "Please select the store" }]}
           >
             <Select>
-              {storeOptions.map((store) => (
+              {storeOptions?.map((store) => (
                 <Select.Option key={store?._id} value={store?._id}>
                   {store?.name || "N/A"}
                 </Select.Option>

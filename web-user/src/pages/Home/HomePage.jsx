@@ -11,6 +11,7 @@ import {
 import Category from "../../components/Category";
 import Store from "../../components/Store";
 import Employee from "../../components/Employee";
+import Product from "../../components/Product";
 
 const { Sider, Content } = Layout;
 
@@ -39,7 +40,7 @@ const HomePage = () => {
       case "4":
         return <Category />;
       case "5":
-        return <p>Products Content</p>;
+        return <Product />;
       default:
         return null;
     }
