@@ -7,11 +7,13 @@ import {
   ShoppingCartOutlined,
   AppstoreOutlined,
   DropboxOutlined,
+  ContainerOutlined,
 } from "@ant-design/icons";
 import Category from "../../components/Category";
 import Store from "../../components/Store";
 import Employee from "../../components/Employee";
 import Product from "../../components/Product";
+import Order from "../../components/Order";
 
 const { Sider, Content } = Layout;
 
@@ -41,6 +43,8 @@ const HomePage = () => {
         return <Category />;
       case "5":
         return <Product />;
+      case "6":
+        return <Order />;
       default:
         return null;
     }
@@ -76,6 +80,9 @@ const HomePage = () => {
               </Menu.Item>
               <Menu.Item key="5" icon={<DropboxOutlined />}>
                 Products
+              </Menu.Item>
+              <Menu.Item key="6" icon={<ContainerOutlined />}>
+                Orders
               </Menu.Item>
             </>
           )}

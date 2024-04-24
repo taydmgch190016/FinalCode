@@ -23,9 +23,10 @@ const LoginPage = () => {
       const { response, err } = await userSignIn({ email, password });
 
       if (response) {
-        const { token, role } = response;
+        const { token, role, storeId } = response;
         localStorage.setItem("token", token);
         localStorage.setItem("role", role);
+        localStorage.setItem("storeId", storeId);
         toast.success("Logged in successfully!");
         navigate("/");
       } else if (err) {

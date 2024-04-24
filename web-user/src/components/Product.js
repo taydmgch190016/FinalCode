@@ -92,17 +92,16 @@ const Product = () => {
       const { response, err } = await updateProduct(productId, values);
       if (response) {
         toast.success("Product updated successfully!");
-      }
-
-      if (err) {
-        toast.error("Error updating product!");
-      } else {
         const updatedProduct = product.map((prod) =>
           prod._id === productId ? { ...prod, ...values } : prod
         );
         setProduct(updatedProduct);
         setModalVisible(false);
         form.resetFields();
+      }
+
+      if (err) {
+        toast.error("Error updating product!");
       }
     } catch (error) {
       toast.error("Error updating product!");
@@ -182,7 +181,7 @@ const Product = () => {
       render: (_, product) => (
         <img
           src={product.imageURL[0]}
-          alt="Product Image"
+          alt="Product"
           style={{ width: "100px", height: "100px" }}
         />
       ),
@@ -370,14 +369,8 @@ const Product = () => {
             <Input
               type="file"
               onChange={(e) => {
-                const file = e.target.files[0];
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                  setImage(reader.result);
-                };
-                reader.readAsDataURL(file);
+                setImage(e.target.files[0]);
               }}
-              required
             />
           </Form.Item>
           <Form.Item

@@ -3,12 +3,18 @@ const router = express.Router();
 const Order = require("../../models/Order");
 const Product = require("../../models/Product");
 const Customer = require("../../models/Customer");
-const nodemailer = require('nodemailer');
+const nodemailer = require("nodemailer");
 
 const createOrder = async (req, res) => {
   try {
-    const { orderItems, shippingAddress, totalPrice, user, storeId, paymentMethod } =
-      req.body;
+    const {
+      orderItems,
+      shippingAddress,
+      totalPrice,
+      user,
+      storeId,
+      paymentMethod,
+    } = req.body;
 
     const productIds = orderItems.map((item) => item.product);
     const products = await Product.find({ _id: { $in: productIds } });
@@ -35,7 +41,7 @@ const createOrder = async (req, res) => {
 
     const savedOrder = await newOrder.save();
     const customer = await Customer.findById(user);
-    let amount= newOrder.totalPrice;
+    let amount = newOrder.totalPrice;
     let emailCustomer = customer.email;
     let transporter = nodemailer.createTransport({
       service: "gmail",
@@ -62,11 +68,11 @@ const createOrder = async (req, res) => {
       '<span style="color: black"> You have a new order from Minh Tay Store! ';
     ("</span><br>");
     content +=
-      '<span style="color: black"> Total amount: ' + amount +
-    ("$</span><br>");
+      '<span style="color: black"> Total amount: ' + amount + "$</span><br>";
     content +=
-      '<span style="color: black"> Payment method: ' + newOrder.paymentMethod +
-    (".</span><br>");
+      '<span style="color: black"> Payment method: ' +
+      newOrder.paymentMethod +
+      ".</span><br>";
     content += "</div> </div>";
     let mainOptions = {
       from: "Final Store",
@@ -93,8 +99,18 @@ const getOrders = async (req, res) => {
     const orders = await Order.find({ user: userID });
     res.json(orders);
   } catch (error) {
-    console.error('Error fetching orders:', error);
-    res.status(500).json({ message: 'Server error' });
+    console.error("Error fetching orders:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+const getAllOrders = async (req, res) => {
+  try {
+    const orders = await Order.find();
+    res.json(orders);
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -102,17 +118,18 @@ const orderDetail = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
     if (!order) {
-      return res.status(404).json({ message: 'Order not found' });
+      return res.status(404).json({ message: "Order not found" });
     }
     res.json(order);
   } catch (error) {
-    console.error('Error fetching order detail:', error);
-    res.status(500).json({ message: 'Server error' });
+    console.error("Error fetching order detail:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
 module.exports = {
   createOrder,
   getOrders,
-  orderDetail
+  orderDetail,
+  getAllOrders,
 };
