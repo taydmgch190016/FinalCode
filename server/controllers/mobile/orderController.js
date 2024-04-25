@@ -142,10 +142,77 @@ const confirmDelivery = async (req, res) => {
   }
 };
 
+const revenueStatistics = async (req, res) => {
+  try {
+    const orders = await Order.find();
+    let totalRevenue = 0;
+    let totalOrders = 0;
+    let totalDeliveredOrders = 0;
+    for (const order of orders) {
+      totalRevenue += order.totalPrice;
+      totalOrders++;
+      if (order.delivery) {
+        totalDeliveredOrders++;
+      }
+    }
+    res.json({ totalRevenue, totalOrders, totalDeliveredOrders });
+  } catch (error) {
+    console.error("Error fetching revenue statistics:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+const getTopProducts = async (req, res) => {
+  try {
+    const topProducts = await Order.aggregate([
+      {
+        $unwind: "$orderItems",
+      },
+      {
+        $group: {
+          _id: "$orderItems.product",
+          totalQuantity: { $sum: "$orderItems.quanlity" },
+        },
+      },
+      {
+        $lookup: {
+          from: "products",
+          localField: "_id",
+          foreignField: "_id",
+          as: "product",
+        },
+      },
+      {
+        $unwind: "$product",
+      },
+      {
+        $sort: { totalQuantity: -1 },
+      },
+      {
+        $limit: 5,
+      },
+      {
+        $project: {
+          _id: 0,
+          product: "$product.name",
+          totalQuantity: 1,
+        },
+      },
+    ]);
+
+    res.status(200).json(topProducts);
+  } catch (error) {
+    console.error("Error retrieving top products:", error);
+    res.status(500).json({ error: "Failed to retrieve top products" });
+  }
+};
+
 module.exports = {
+  getTopProducts,
   createOrder,
   getOrders,
   orderDetail,
   getAllOrders,
   confirmDelivery,
+  revenueStatistics,
 };
