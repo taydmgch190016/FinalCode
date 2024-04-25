@@ -7,34 +7,39 @@ exports.webLogin = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Tìm kiếm người dùng trong bảng Employee
-    let user = await Employee.findOne({ email });
-    let role = "employee"; // Mặc định là employee
+    let user = await Employee.findOne({ email }).populate("storeId");
+    let role = "employee";
+    let storeId = null;
 
-    // Nếu không tìm thấy người dùng trong bảng Employee, thì tìm kiếm trong bảng Admin
     if (!user) {
       user = await Admin.findOne({ email });
-      role = "admin"; // Nếu là admin
+      role = "admin";
     }
 
     if (!user) {
-      // Không tìm thấy người dùng
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    // Kiểm tra mật khẩu
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      // Sai mật khẩu
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    // Tạo JWT token
+    if (role === "employee" && user.storeId) {
+      storeId = user.storeId._id;
+    }
+
     const token = jwt.sign({ userId: user._id, role }, process.env.JWT_SECRET, {
       expiresIn: "7d",
     });
 
-    res.json({ message: "Login successful", token, id: user._id, role });
+    res.json({
+      message: "Login successful",
+      token,
+      id: user._id,
+      role,
+      storeId,
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

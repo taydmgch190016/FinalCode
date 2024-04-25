@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Form, Input, Button, Checkbox } from "antd";
 import { Container } from "./LoginPageCss";
 import { toast } from "react-toastify";
@@ -9,6 +9,13 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons";
 const LoginPage = () => {
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/");
+    }
+  }, []);
+
   const onFinish = async (values) => {
     const { email, password } = values;
 
@@ -16,9 +23,10 @@ const LoginPage = () => {
       const { response, err } = await userSignIn({ email, password });
 
       if (response) {
-        const { token, role } = response;
+        const { token, role, storeId } = response;
         localStorage.setItem("token", token);
         localStorage.setItem("role", role);
+        localStorage.setItem("storeId", storeId);
         toast.success("Logged in successfully!");
         navigate("/");
       } else if (err) {
