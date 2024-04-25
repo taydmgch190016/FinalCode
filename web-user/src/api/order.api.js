@@ -19,3 +19,23 @@ export const confirmDelivery = async (id) => {
     return { err };
   }
 };
+
+export const revenueStatistics = async () => {
+  try {
+    const response = await axiosClient.get("orders/revenueStatistics");
+
+    return { response };
+  } catch (err) {
+    return { err };
+  }
+};
+
+export const getTopProducts = async () => {
+  try {
+    const response = await axiosClient.get("orders/getTopProducts");
+
+    return { response };
+  } catch (err) {
+    return { err };
+  }
+};

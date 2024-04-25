@@ -14,6 +14,7 @@ import Store from "../../components/Store";
 import Employee from "../../components/Employee";
 import Product from "../../components/Product";
 import Order from "../../components/Order";
+import Dashboard from "../../components/Dashboard";
 
 const { Sider, Content } = Layout;
 
@@ -34,7 +35,7 @@ const HomePage = () => {
   const renderContent = () => {
     switch (selectedKey) {
       case "1":
-        return <p>Dashboard Content</p>;
+        return <Dashboard />;
       case "2":
         return <Store />;
       case "3":
