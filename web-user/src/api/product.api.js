@@ -19,15 +19,20 @@ export const addProduct = async ({
   storeId,
   categoryId,
 }) => {
+  const formData = new FormData();
+  formData.append("name", name);
+  formData.append("description", description);
+  formData.append("price", price);
+  formData.append("quantity", quantity);
+  formData.append("image", image);
+  formData.append("storeId", storeId);
+  formData.append("categoryId", categoryId);
+
   try {
-    const response = await axiosClient.post("products/addProduct", {
-      name,
-      description,
-      price,
-      quantity,
-      image,
-      storeId,
-      categoryId,
+    const response = await axiosClient.post("products/addProduct", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     });
 
     return { response };
@@ -40,17 +45,23 @@ export const updateProduct = async (
   productId,
   { name, description, price, quantity, image, storeId, categoryId }
 ) => {
+  const formData = new FormData();
+  formData.append("name", name);
+  formData.append("description", description);
+  formData.append("price", price);
+  formData.append("quantity", quantity);
+  formData.append("image", image);
+  formData.append("storeId", storeId);
+  formData.append("categoryId", categoryId);
+
   try {
     const response = await axiosClient.put(
       `products/updateProduct/${productId}`,
+      formData,
       {
-        name,
-        description,
-        price,
-        quantity,
-        image,
-        storeId,
-        categoryId,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       }
     );
 

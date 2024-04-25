@@ -1,6 +1,16 @@
 import { toast } from "react-toastify";
 import React, { useEffect, useState } from "react";
-import { Table, Button, Modal, Form, Input, Flex, Select, Tooltip } from "antd";
+import {
+  Table,
+  Button,
+  Modal,
+  Form,
+  Input,
+  Flex,
+  Select,
+  Tooltip,
+  Upload,
+} from "antd";
 
 import {
   getProduct,
@@ -65,8 +75,10 @@ const Product = () => {
   const handleAddProduct = async (values) => {
     setLoading(true);
 
+    const valuesWithImage = { ...values, image };
+
     try {
-      const { response, err } = await addProduct(values);
+      const { response, err } = await addProduct(valuesWithImage);
       if (response) {
         toast.success("Product added successfully!");
       }
@@ -88,8 +100,10 @@ const Product = () => {
   const handleUpdateProduct = async (productId, values) => {
     setLoading(true);
 
+    const valuesWithImage = { ...values, image };
+
     try {
-      const { response, err } = await updateProduct(productId, values);
+      const { response, err } = await updateProduct(productId, valuesWithImage);
       if (response) {
         toast.success("Product updated successfully!");
         const updatedProduct = product.map((prod) =>
@@ -366,12 +380,24 @@ const Product = () => {
               },
             ]}
           >
-            <Input
-              type="file"
-              onChange={(e) => {
-                setImage(e.target.files[0]);
+            <Upload
+              listType="picture-card"
+              showUploadList={false}
+              beforeUpload={(file) => {
+                setImage(file);
+                return false;
               }}
-            />
+            >
+              {image ? (
+                <img
+                  src={URL.createObjectURL(image)}
+                  alt="Product"
+                  style={{ width: "100px", height: "100px" }}
+                />
+              ) : (
+                <Button>Upload</Button>
+              )}
+            </Upload>
           </Form.Item>
           <Form.Item
             name="storeId"
