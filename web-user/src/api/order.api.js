@@ -9,3 +9,13 @@ export const getOrder = async () => {
     return { err };
   }
 };
+
+export const confirmDelivery = async (id) => {
+  try {
+    const response = await axiosClient.post(`orders/confirmDelivery/${id}`);
+
+    return { response };
+  } catch (err) {
+    return { err };
+  }
+};

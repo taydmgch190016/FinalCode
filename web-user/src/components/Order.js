@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Table, Button, Flex } from "antd";
-import { getOrder } from "../api/order.api";
+import { getOrder, confirmDelivery } from "../api/order.api";
 import { getCustomer } from "../api/customer.api";
 import { getStore } from "../api/store.api";
 import { toast } from "react-toastify";
@@ -17,14 +17,54 @@ const Order = () => {
   const fetchOrders = async () => {
     try {
       const { response, err } = await getOrder(currentPage, pageSize);
+      const storeResponse = await getStore();
+      const storedStoreId = localStorage.getItem("storeId");
 
       if (err) {
         toast.error("Error fetching orders!");
       } else {
-        setOrders(response);
+        const ordersWithDetails = await Promise.all(
+          response.map(async (order) => {
+            const customerResponse = await getCustomer(order.user);
+            const customer = customerResponse.response;
+
+            const store = storeResponse.response.find(
+              (store) => store._id === order.storeId
+            );
+
+            return {
+              ...order,
+              user: customer
+                ? `${customer.username}, ${customer.email}`
+                : "N/A",
+              storeName: store ? store.name : "N/A",
+            };
+          })
+        );
+
+        const filteredOrders = ordersWithDetails.filter(
+          (order) => order.storeId === storedStoreId
+        );
+
+        setOrders(filteredOrders);
       }
     } catch (error) {
       toast.error("Error fetching orders!");
+    }
+  };
+
+  const handleConfirmDelivery = async (orderId) => {
+    try {
+      const { response, err } = await confirmDelivery(orderId);
+
+      if (err) {
+        toast.error("Error confirming delivery!");
+      } else {
+        toast.success("Delivery confirmed!");
+        fetchOrders();
+      }
+    } catch (error) {
+      toast.error("Error confirming delivery!");
     }
   };
 
@@ -36,7 +76,7 @@ const Order = () => {
       align: "center",
     },
     {
-      title: "Address",
+      title: "Shipping Address",
       dataIndex: "shippingAddress",
       key: "shippingAddress",
       align: "center",
@@ -64,11 +104,12 @@ const Order = () => {
       dataIndex: "totalPrice",
       key: "totalPrice",
       align: "center",
+      render: (totalPrice) => <span>${totalPrice}</span>,
     },
     {
       title: "Store",
-      dataIndex: "storeId",
-      key: "storeId",
+      dataIndex: "storeName",
+      key: "storeName",
       align: "center",
     },
     {
@@ -100,10 +141,16 @@ const Order = () => {
       dataIndex: "",
       key: "actions",
       align: "right",
-      render: (_, category) => (
+      render: (order) => (
         <div className="actions-cell" style={{ textAlign: "right" }}>
           <Flex wrap="wrap" gap="small" justify="flex-end" align="center">
-            <Button type="primary">Confirm</Button>
+            <Button
+              type="primary"
+              disabled={order.delivery}
+              onClick={() => handleConfirmDelivery(order._id)}
+            >
+              Confirm
+            </Button>
           </Flex>
         </div>
       ),

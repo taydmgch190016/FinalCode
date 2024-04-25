@@ -127,9 +127,25 @@ const orderDetail = async (req, res) => {
   }
 };
 
+const confirmDelivery = async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id);
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+    order.delivery = true;
+    const updatedOrder = await order.save();
+    res.json(updatedOrder);
+  } catch (error) {
+    console.error("Error confirming delivery:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 module.exports = {
   createOrder,
   getOrders,
   orderDetail,
   getAllOrders,
+  confirmDelivery,
 };
