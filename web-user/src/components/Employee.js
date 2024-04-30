@@ -248,6 +248,7 @@ const Employee = () => {
           </Form.Item>
           <Form.Item
             name="password"
+            type="password"
             label="Employee Password"
             rules={[
               { required: true, message: "Please enter the employee password" },

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Form, Input, Button, Checkbox } from "antd";
+import { Form, Input, Button, Image } from "antd";
 import { Container } from "./LoginPageCss";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -40,6 +40,11 @@ const LoginPage = () => {
 
   return (
     <Container>
+      <Image
+      width={200}
+      preview={false}
+      src="https://res.cloudinary.com/dcc0yhyjq/image/upload/v1712695169/xakwryqc6r1gwhptqfzt.png"
+      />
       <Form
         name="normal_login"
         className="login-form"

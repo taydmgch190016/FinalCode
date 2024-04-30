@@ -84,6 +84,15 @@ const ProductDetail = () => {
           marginHorizontal: 10,
           marginVertical: 10,
         }}
+        onPress={async () => {
+          try {
+            await addItemToCart(route?.params?.product);
+            navigation.navigate("Payment");
+          } catch (error) {
+            // Xử lý lỗi nếu có
+            console.error("Error adding item to cart:", error);
+          }
+        }}
       >
         <Text>Buy Now</Text>
         </Pressable>

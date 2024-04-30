@@ -5,8 +5,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 let baseUrl = 'https://api-m.sandbox.paypal.com';
 const base64 = require('base-64');
 
-let clientId = 'AdS3nGI7pF0Byey-D1SzIRIQ4HIZtLY7jDKyXhIkcTSiXQZxyagDbCWAn4F_hHYZU7FlmjNSSph4bqVH';
-let secretKey = 'EA1CnpViYO7qWk2QdT8X9gMZEliUZPE-Z5hnuz1QcEpZPNgkVHU2bOUhb2xBH7rIrjVukwrFT2YmdVYD';
+let clientId = 'AakswGcoFdki0tGuihn7cgJFWAS5FWK3QW7YCa8LfW0JjO88U3RZkQUyT-s_Nt8lkhjrhUIj8L-1dCoO';
+let secretKey = 'EA5CIpzIRJFgwxThRVvy48nq6bB10kXETbqy3C4IpYR0y2fJdDrc31odtT90cA9UCyAtgwnZIznSDM0a';
 
 const generateToken = () => {
     var headers = new Headers()

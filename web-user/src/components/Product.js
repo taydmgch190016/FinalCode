@@ -34,6 +34,43 @@ const Product = () => {
     fetchProduct();
   }, []);
 
+  // const fetchProduct = async () => {
+  //   try {
+  //     const { response: productResponse, err: productErr } = await getProduct(
+  //       currentPage,
+  //       pageSize
+  //     );
+  //     const { response: storeResponse, err: storeErr } = await getStore();
+  //     const { response: categoryResponse, err: categoryErr } =
+  //       await getCategory();
+
+  //     if (productErr || storeErr || categoryErr) {
+  //       toast.error("Error fetching product, store or category!");
+  //     } else {
+  //       const updatedProduct = productResponse.map((prod) => {
+  //         const store = storeResponse.find(
+  //           (store) => store._id === prod.storeId
+  //         );
+  //         const storeName = store ? store.name : "N/A";
+  //         const category = categoryResponse.find(
+  //           (category) => category._id === prod.categoryId
+  //         );
+  //         const categoryName = category ? category.name : "N/A";
+  //         return {
+  //           ...prod,
+  //           storeName,
+  //           storeOptions: storeResponse,
+  //           categoryName,
+  //           categoryOptions: categoryResponse,
+  //         };
+  //       });
+
+  //       setProduct(updatedProduct);
+  //     }
+  //   } catch (error) {
+  //     toast.error("Error fetching product!");
+  //   }
+  // };
   const fetchProduct = async () => {
     try {
       const { response: productResponse, err: productErr } = await getProduct(
@@ -43,6 +80,7 @@ const Product = () => {
       const { response: storeResponse, err: storeErr } = await getStore();
       const { response: categoryResponse, err: categoryErr } =
         await getCategory();
+      const storedStoreId = localStorage.getItem("storeId");
 
       if (productErr || storeErr || categoryErr) {
         toast.error("Error fetching product, store or category!");
@@ -65,7 +103,11 @@ const Product = () => {
           };
         });
 
-        setProduct(updatedProduct);
+        const filteredProduct = updatedProduct.filter(
+          (prod) => prod.storeId === storedStoreId
+        );
+
+        setProduct(filteredProduct);
       }
     } catch (error) {
       toast.error("Error fetching product!");
