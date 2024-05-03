@@ -170,6 +170,7 @@ const Store = () => {
           total: stories.length,
           onChange: (page, pageSize) => setCurrentPage(page),
         }}
+        scroll={{ x: 800, y: 600 }}
       />
       <Modal
         visible={modalVisible}

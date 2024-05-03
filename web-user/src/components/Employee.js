@@ -206,6 +206,7 @@ const Employee = () => {
           total: employee.length,
           onChange: (page, pageSize) => setCurrentPage(page),
         }}
+        scroll={{ x: 800, y: 600 }}
       />
       <Modal
         visible={modalVisible}
@@ -248,13 +249,12 @@ const Employee = () => {
           </Form.Item>
           <Form.Item
             name="password"
-            type="password"
             label="Employee Password"
             rules={[
               { required: true, message: "Please enter the employee password" },
             ]}
           >
-            <Input />
+            <Input type="password" />
           </Form.Item>
           <Form.Item
             name="storeId"

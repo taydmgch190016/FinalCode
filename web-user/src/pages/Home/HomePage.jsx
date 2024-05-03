@@ -16,7 +16,47 @@ import Product from "../../components/Product";
 import Order from "../../components/Order";
 import Dashboard from "../../components/Dashboard";
 
-const { Sider, Content } = Layout;
+const { Content } = Layout;
+
+const menuItems = [
+  { key: "1", title: "Dashboard", icon: <DashboardOutlined /> },
+  { key: "2", title: "Stores", icon: <ShoppingCartOutlined />, role: "admin" },
+  { key: "3", title: "Employees", icon: <UserOutlined />, role: "admin" },
+  {
+    key: "4",
+    title: "Categories",
+    icon: <AppstoreOutlined />,
+    role: "employee",
+  },
+  { key: "5", title: "Products", icon: <DropboxOutlined />, role: "employee" },
+  { key: "6", title: "Orders", icon: <ContainerOutlined />, role: "employee" },
+];
+
+const HomeMenu = ({ selectedKey, handleMenuClick, role, handleLogout }) => {
+  const filteredMenuItems = menuItems.filter((item) => {
+    return item.role === role || item.role === undefined;
+  });
+
+  return (
+    <Menu
+      theme="dark"
+      mode="horizontal"
+      defaultSelectedKeys={["1"]}
+      selectedKeys={[selectedKey]}
+      onClick={({ key }) => handleMenuClick(key)}
+      responsive
+    >
+      {filteredMenuItems.map((item) => (
+        <Menu.Item key={item.key} icon={item.icon}>
+          {item.title}
+        </Menu.Item>
+      ))}
+      <Menu.Item key="7" icon={<LogoutOutlined />} onClick={handleLogout}>
+        Logout
+      </Menu.Item>
+    </Menu>
+  );
+};
 
 const HomePage = () => {
   const role = localStorage.getItem("role");
@@ -53,51 +93,12 @@ const HomePage = () => {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Sider>
-        <Menu
-          theme="dark"
-          mode="inline"
-          defaultSelectedKeys={["1"]}
-          selectedKeys={[selectedKey]}
-          onClick={({ key }) => handleMenuClick(key)}
-        >
-          <Menu.Item key="1" icon={<DashboardOutlined />}>
-            Dashboard
-          </Menu.Item>
-          {role === "admin" && (
-            <>
-              <Menu.Item key="2" icon={<ShoppingCartOutlined />}>
-                Stores
-              </Menu.Item>
-              <Menu.Item key="3" icon={<UserOutlined />}>
-                Employees
-              </Menu.Item>
-            </>
-          )}
-          {role === "employee" && (
-            <>
-              <Menu.Item key="4" icon={<AppstoreOutlined />}>
-                Categories
-              </Menu.Item>
-              <Menu.Item key="5" icon={<DropboxOutlined />}>
-                Products
-              </Menu.Item>
-              <Menu.Item key="6" icon={<ContainerOutlined />}>
-                Orders
-              </Menu.Item>
-            </>
-          )}
-        </Menu>
-        <Menu
-          theme="dark"
-          mode="inline"
-          style={{ position: "absolute", bottom: 0 }}
-        >
-          <Menu.Item key="6" icon={<LogoutOutlined />} onClick={handleLogout}>
-            Logout
-          </Menu.Item>
-        </Menu>
-      </Sider>
+      <HomeMenu
+        selectedKey={selectedKey}
+        handleMenuClick={handleMenuClick}
+        role={role}
+        handleLogout={handleLogout}
+      />
       <Layout>
         <Content style={{ padding: "20px", background: "#ccc" }}>
           {renderContent()}

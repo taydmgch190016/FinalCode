@@ -6,7 +6,7 @@ import { getStore } from "../api/store.api";
 import { toast } from "react-toastify";
 
 const Order = () => {
-  const [pageSize, setPageSize] = useState(6);
+  const [pageSize, setPageSize] = useState(5);
   const [orders, setOrders] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -170,6 +170,7 @@ const Order = () => {
           total: orders.length,
           onChange: (page, pageSize) => setCurrentPage(page),
         }}
+        scroll={{ x: 800, y: 600 }}
       />
     </Flex>
   );
