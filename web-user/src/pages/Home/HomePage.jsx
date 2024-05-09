@@ -19,7 +19,7 @@ import Dashboard from "../../components/Dashboard";
 const { Content } = Layout;
 
 const menuItems = [
-  { key: "1", title: "Dashboard", icon: <DashboardOutlined /> },
+  { key: "1", title: "Dashboard", icon: <DashboardOutlined />, role: "admin"  },
   { key: "2", title: "Stores", icon: <ShoppingCartOutlined />, role: "admin" },
   { key: "3", title: "Employees", icon: <UserOutlined />, role: "admin" },
   {
@@ -41,17 +41,18 @@ const HomeMenu = ({ selectedKey, handleMenuClick, role, handleLogout }) => {
     <Menu
       theme="dark"
       mode="horizontal"
-      defaultSelectedKeys={["1"]}
+      //defaultSelectedKeys={["1"]}
       selectedKeys={[selectedKey]}
       onClick={({ key }) => handleMenuClick(key)}
       responsive
     >
+
       {filteredMenuItems.map((item) => (
         <Menu.Item key={item.key} icon={item.icon}>
           {item.title}
         </Menu.Item>
       ))}
-      <Menu.Item key="7" icon={<LogoutOutlined />} onClick={handleLogout}>
+      <Menu.Item key="7" icon={<LogoutOutlined />} onClick={handleLogout} style={{color:"red"}}>
         Logout
       </Menu.Item>
     </Menu>
@@ -60,7 +61,7 @@ const HomeMenu = ({ selectedKey, handleMenuClick, role, handleLogout }) => {
 
 const HomePage = () => {
   const role = localStorage.getItem("role");
-  const [selectedKey, setSelectedKey] = useState("1");
+  const [selectedKey, setSelectedKey] = useState(role === "admin" ? "1" : "4");
 
   const handleMenuClick = (key) => {
     setSelectedKey(key);

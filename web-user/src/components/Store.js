@@ -191,6 +191,9 @@ const Store = () => {
                 } else {
                   handleAddStore(values);
                 }
+              })
+              .catch((error) => {
+                toast.error("Please fill in all information!");
               });
             }}
           >

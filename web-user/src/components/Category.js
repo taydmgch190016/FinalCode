@@ -182,21 +182,23 @@ const Category = () => {
         title="Category"
         onCancel={handleModalCancel}
         footer={[
-          <Button key="cancel" onClick={handleModalCancel}>
-            Cancel
-          </Button>,
           <Button
             key="submit"
             type="primary"
             loading={loading}
             onClick={() => {
-              form.validateFields().then((values) => {
-                if (form.getFieldValue("_id")) {
-                  handleUpdateCategory(form.getFieldValue("_id"), values);
-                } else {
-                  handleAddCategory(values);
-                }
-              });
+              form
+                .validateFields()
+                .then((values) => {
+                  if (form.getFieldValue("_id")) {
+                    handleUpdateCategory(form.getFieldValue("_id"), values);
+                  } else {
+                    handleAddCategory(values);
+                  }
+                })
+                .catch((error) => {
+                  toast.error("Please fill in all information!");
+                });
             }}
           >
             {form.getFieldValue("_id") ? "Save" : "Add"}

@@ -336,6 +336,9 @@ const Product = () => {
                 } else {
                   handleAddProduct(values);
                 }
+              })
+              .catch((error) => {
+                toast.error("Please fill in all information!");
               });
             }}
           >

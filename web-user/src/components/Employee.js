@@ -227,6 +227,9 @@ const Employee = () => {
                 } else {
                   handleAddEmployeee(values);
                 }
+              })
+              .catch((error) => {
+                toast.error("Please fill in all information!");
               });
             }}
           >
